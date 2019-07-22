@@ -29,20 +29,20 @@ for(var i = 0; i < itemNames.length; i++){
 function render(){
   // Render Image 1
   var randomIndex = getUniqueIndex();
-  //allItems[randomIndex].views++;
+  allItems[randomIndex].views++;
   imageOneEl.src = allItems[randomIndex].filepath;
   imageOneEl.alt = allItems[randomIndex].name;
   imageOneEl.title = allItems[randomIndex].name;
   // Render Image 2
   randomIndex = getUniqueIndex();
-  //allItems[randomIndex].views++;
+  allItems[randomIndex].views++;
   imageTwoEl.src = allItems[randomIndex].filepath;
   imageTwoEl.alt = allItems[randomIndex].name;
   imageTwoEl.title = allItems[randomIndex].name;
 
   // Render Image 3
   randomIndex = getUniqueIndex();
-  //allItems[randomIndex].views++;
+  allItems[randomIndex].views++;
   imageThreeEl.src = allItems[randomIndex].filepath;
   imageThreeEl.alt = allItems[randomIndex].name;
   imageThreeEl.title = allItems[randomIndex].name;
@@ -69,5 +69,18 @@ function getUniqueIndex(){
   recentRandomNumbers.push(randomIndex);
   return randomIndex;
 }
+
+// ====== Event handler ======
+function handleClick(){
+  // Identify which image was clicked on
+  var chosenImg = event.target.title;
+  console.log('my chosen image is ', chosenImg);
+
+  // render all images again to provide new choices
+  render();
+}
+
+// ===== Event Listener =======
+ShoppingContainerEl.addEventListener('click', handleClick);
 
 render();
