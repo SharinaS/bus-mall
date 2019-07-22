@@ -3,7 +3,7 @@
 // get the image to render it
 var imageOneEl = document.getElementById('item-one');
 var imageTwoEl = document.getElementById('item-two');
-var imageThreeEl = document.getElementById('item-two');
+var imageThreeEl = document.getElementById('item-three');
 var ShoppingContainerEl = document.getElementById('shopping-container');
 
 var allItems = [];
@@ -27,16 +27,25 @@ for(var i = 0; i < itemNames.length; i++){
 
 // make a render function for the randomized images
 function render(){
+  // Render Image 1
   var randomIndex = getUniqueIndex();
   //allItems[randomIndex].views++;
   imageOneEl.src = allItems[randomIndex].filepath;
   imageOneEl.alt = allItems[randomIndex].name;
   imageOneEl.title = allItems[randomIndex].name;
-
+  // Render Image 2
+  randomIndex = getUniqueIndex();
+  //allItems[randomIndex].views++;
   imageTwoEl.src = allItems[randomIndex].filepath;
   imageTwoEl.alt = allItems[randomIndex].name;
   imageTwoEl.title = allItems[randomIndex].name;
 
+  // Render Image 3
+  randomIndex = getUniqueIndex();
+  //allItems[randomIndex].views++;
+  imageThreeEl.src = allItems[randomIndex].filepath;
+  imageThreeEl.alt = allItems[randomIndex].name;
+  imageThreeEl.title = allItems[randomIndex].name;
 }
 
 // ======= Helper Functions =======

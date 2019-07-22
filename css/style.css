@@ -10,8 +10,8 @@ h1{
   img{
     width: 30%;
     border: 4px groove lightcoral;
-    margin: 1em;
-    padding: 1em;
+    margin: 0.5em;
+    padding: 0.5em;
     background-color: whitesmoke;
   }
   #shopping-container{
@@ -19,7 +19,7 @@ h1{
     border: 4px groove grey;
     border-radius: 25px;
     min-height: 335px;
-    width: 80%;
+    width: 95%;
     margin: auto;
     padding: 1em;
     text-align: center;
