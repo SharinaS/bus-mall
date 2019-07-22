@@ -28,11 +28,20 @@ for(var i = 0; i < itemNames.length; i++){
 // make a render function for the randomized images
 function render(){
   var randomIndex = getUniqueIndex();
-  
+  //allItems[randomIndex].views++;
+  imageOneEl.src = allItems[randomIndex].filepath;
+  imageOneEl.alt = allItems[randomIndex].name;
+  imageOneEl.title = allItems[randomIndex].name;
+
+  imageTwoEl.src = allItems[randomIndex].filepath;
+  imageTwoEl.alt = allItems[randomIndex].name;
+  imageTwoEl.title = allItems[randomIndex].name;
 
 }
 
 // ======= Helper Functions =======
+// TODO: Write helper function for rendering
+
 function randomNumber(min, max){
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
@@ -51,3 +60,5 @@ function getUniqueIndex(){
   recentRandomNumbers.push(randomIndex);
   return randomIndex;
 }
+
+render();
