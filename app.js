@@ -5,7 +5,7 @@ var imageOneEl = document.getElementById('item-one');
 var imageTwoEl = document.getElementById('item-two');
 var imageThreeEl = document.getElementById('item-three');
 var ShoppingContainerEl = document.getElementById('shopping-container');
-var listEl = document.getElementById('results');
+// var listEl = document.getElementById('results');
 
 var allItems = [];
 var itemNames = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'tauntaun.jpg', 'unicorn.jpg', 'water-can.jpg', 'wine-glass.jpg', 'sweep.png', 'usb.gif'];
@@ -97,11 +97,14 @@ function handleClick(){
       allItems[i].votes++;
     }
   }
+  
   // turn off event listener after 25 clicks
   if (totalVotes > 24 ){
     ShoppingContainerEl.removeEventListener('click', handleClick, true);
 
-    // populate votes using prototype function 
+  
+    // render vote totals for each instance 
+
     // this.generateString();  // <-----------------------------
     // for(var j = 0; j < allItems.length; j++){
     //   var liEl = document.createElement('li');
@@ -110,7 +113,6 @@ function handleClick(){
     // }
   }
 
-  //render again
   render();
 }
 
