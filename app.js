@@ -5,15 +5,15 @@ var imageOneEl = document.getElementById('item-one');
 var imageTwoEl = document.getElementById('item-two');
 var imageThreeEl = document.getElementById('item-three');
 var ShoppingContainerEl = document.getElementById('shopping-container');
-
 var allItems = [];
 var itemNames = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'tauntaun.jpg', 'unicorn.jpg', 'water-can.jpg', 'wine-glass.jpg', 'sweep.png', 'usb.gif'];
 var recentRandomNumbers = [];
-
 var totalVotes = 0;
-
-
 var ulEl = document.getElementById('list');
+
+// chart making
+var namesArray = [];
+var itemVotes = [];
 
 //====== Constructor Function ======
 function Item(name){
@@ -21,7 +21,6 @@ function Item(name){
   this.filepath = `img/${name}`;
   this.votes = 0;
   this.views = 0;
-  this.results = '';
   allItems.push(this);
 }
 
@@ -75,12 +74,6 @@ function getUniqueIndex(){
   return randomIndex;
 }
 
-// // render to HTML
-// function addElement(childElType, childContent, parentEl){
-//   var childEl = document.createElement(childElType);
-//   childEl.textContent = childContent;
-//   parentEl.appendChild(childEl);
-// }
 
 // ====== Event handler ======
 function handleClick(){
@@ -98,7 +91,7 @@ function handleClick(){
   if (totalVotes > 24 ){
     // turn off event listener after 25 clicks
     ShoppingContainerEl.removeEventListener('click', handleClick, true); // <----- check later if true needed
-    generateList();
+    generateArrays();
   }
   render();
 }
@@ -112,18 +105,61 @@ Item.prototype.generateResults = function(){
   ulEl.appendChild(liEl);
 };
 
-function generateList(){
+
+function generateArrays(){
   for(var i = 0; i < allItems.length; i++){
-    allItems[i].generateResults();
+    namesArray.push(allItems[i].name);
+    itemVotes.push(allItems[i].votes);
   }
+  generateChart();
 }
 
+function generateChart(){
+  var ctx = document.getElementById('my-canvas').getContext('2d');
+  new Chart(ctx, {
+    type: 'horizontalBar',
+    data: {
+      labels: namesArray,
+      datasets: [{
+        label: '# of Votes',
+        data: itemVotes,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+}
 
-// each object instance is only responsible for rendering its own <li>. Once the cutoff point of cicks is reached, function generateList is called, which then activates the prototype function. 
 
 // ===== Event Listener =======
 ShoppingContainerEl.addEventListener('click', handleClick, true);
 
 // ===== Render =====
 render();
+
+
 
