@@ -8,7 +8,7 @@ h1{
   }
 
   img{
-    width: 30%;
+    width: 25%;
     border: 4px groove lightcoral;
     margin: 0.5em;
     padding: 0.5em;
@@ -19,12 +19,12 @@ h1{
     border: 4px groove grey;
     border-radius: 25px;
     min-height: 335px;
-    width: 95%;
+    width: 80%;
     margin: auto;
     padding: 1em;
     text-align: center;
   }
   
-  #item-one, #item-two {
+  #item-one, #item-two, #item-three {
     float: left;
   }
