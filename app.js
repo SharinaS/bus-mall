@@ -1,6 +1,6 @@
 'use strict';
 
-var ulEl = document.getElementById('list');
+
 var ShoppingContainerEl = document.getElementById('shopping-container');
 var imageOneEl = document.getElementById('item-one');
 var imageTwoEl = document.getElementById('item-two');
@@ -9,7 +9,7 @@ var canvas1 = document.getElementById('graph-1');
 var canvas2 = document.getElementById('graph-2');
 var canvas3 = document.getElementById('graph-3');
 
-var allItems = [];
+var allItems = []; 
 var itemNames = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'tauntaun.jpg', 'unicorn.jpg', 'water-can.jpg', 'wine-glass.jpg', 'sweep.png', 'usb.gif'];
 var recentRandomNumbers = [];
 var totalVotes = 0;
@@ -19,6 +19,15 @@ var namesArray = [];
 var itemVotes = [];
 var voteToViewPerc = [];
 var top3Votes = [];
+
+//====== Local Storage ======
+
+if(localStorage){  
+  var allItemsStringed = localStorage.getItem('allTheItems');
+  // store line 27 to a variable, then assign to allItems.
+  var localStorageItems = JSON.parse(allItemsStringed);
+  allItems = localStorageItems;
+}
 
 
 //====== Constructor Function ======
@@ -30,23 +39,17 @@ function Item(name){
   allItems.push(this);
 }
 
-
-//===== Prototype Functions =====
-Item.prototype.generateResults = function(){
-  //combine string of this.votes + "votes for the " this.name
-  this.results = `${this.votes} votes for ${this.name}`;
-  var liEl = document.createElement('li');
-  liEl.textContent = this.results;
-  ulEl.appendChild(liEl);
-};
-
-
 //===== Instantiations ======
-for(var i = 0; i < itemNames.length; i++){
-  new Item(itemNames[i]);
+function instantiateAllItems(){
+  if(localStorage.length < 1){
+    for(var i = 0; i < itemNames.length; i++){
+      new Item(itemNames[i]);
+    }
+  }
 }
 
-// ====== Event handler ======
+
+// ====== Event Handler ======
 function handleClick(){
   // Identify which image was clicked on
   var chosenImg = event.target.title;
@@ -59,11 +62,21 @@ function handleClick(){
     }
   }
 
-  if (totalVotes > 25 ){  
-    // turn off event listener after 25 clicks
+  if (totalVotes > 3 ){ // <------------------------------------ change back to 25
+    // turn off event listener after 25 clicks, generate arrays
     ShoppingContainerEl.removeEventListener('click', handleClick);
+    // arrays for graphs
     generateArrays();
+
+    
+    // add item to localStorage
+    // var allItemsStringed = JSON.stringify(allItems);
+    localStorage.setItem('allTheItems', JSON.stringify(allItems));
+
+
   }
+
+  // make the canvas appear, since it was hidden prior to activation of handleClick()
   canvas1.removeAttribute('hidden');
   canvas2.removeAttribute('hidden');
   canvas3.removeAttribute('hidden');
@@ -147,12 +160,12 @@ function generateArrays(){
   top3Votes.push(sortedVotes[2]);
   console.log('sorted votes in generateArray function', sortedVotes);
 
-  generateChart();
+  generateChart1();
   generateChart2();
   generateChart3();
 }
 
-function generateChart(){
+function generateChart1(){
   var ctx = document.getElementById('graph-1').getContext('2d');
   new Chart(ctx, {
     type: 'horizontalBar',
@@ -276,8 +289,8 @@ function generateChart3(){
 }
 
 
-
-// ===== Render =====
+// ===== Call Functions =====
+instantiateAllItems();
 render();
 
 
