@@ -1,12 +1,11 @@
 'use strict';
 
 var ulEl = document.getElementById('list');
+var ShoppingContainerEl = document.getElementById('shopping-container');
 var imageOneEl = document.getElementById('item-one');
 var imageTwoEl = document.getElementById('item-two');
-
 var imageThreeEl = document.getElementById('item-three');
-var ShoppingContainerEl = document.getElementById('shopping-container');
-var canvas1 = document.getElementById('my-canvas');
+var canvas1 = document.getElementById('graph-1');
 var canvas2 = document.getElementById('graph-2');
 var canvas3 = document.getElementById('graph-3');
 
@@ -21,6 +20,7 @@ var itemVotes = [];
 var voteToViewPerc = [];
 var top3Votes = [];
 
+
 //====== Constructor Function ======
 function Item(name){
   this.name = name.split('.')[0];
@@ -30,56 +30,21 @@ function Item(name){
   allItems.push(this);
 }
 
+
+//===== Prototype Functions =====
+Item.prototype.generateResults = function(){
+  //combine string of this.votes + "votes for the " this.name
+  this.results = `${this.votes} votes for ${this.name}`;
+  var liEl = document.createElement('li');
+  liEl.textContent = this.results;
+  ulEl.appendChild(liEl);
+};
+
+
 //===== Instantiations ======
 for(var i = 0; i < itemNames.length; i++){
   new Item(itemNames[i]);
 }
-
-
-// =======Rendering =======
-// make a render function for the randomized images
-function render(){  // <---------------------------- TODO: DRY
-  // Render Image 1
-  var randomIndex = getUniqueIndex(); 
-  allItems[randomIndex].views++;
-  imageOneEl.src = allItems[randomIndex].filepath;
-  imageOneEl.alt = allItems[randomIndex].name;
-  imageOneEl.title = allItems[randomIndex].name;
-  // Render Image 2
-  randomIndex = getUniqueIndex();
-  allItems[randomIndex].views++;
-  imageTwoEl.src = allItems[randomIndex].filepath;
-  imageTwoEl.alt = allItems[randomIndex].name;
-  imageTwoEl.title = allItems[randomIndex].name;
-
-  // Render Image 3
-  randomIndex = getUniqueIndex();
-  allItems[randomIndex].views++;
-  imageThreeEl.src = allItems[randomIndex].filepath;
-  imageThreeEl.alt = allItems[randomIndex].name;
-  imageThreeEl.title = allItems[randomIndex].name;
-}
-
-// ======= Helper Functions =======
-// create a random number
-function randomNumber(min, max){
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-// get a random and unique index
-function getUniqueIndex(){
-  var randomIndex = randomNumber(0, allItems.length-1); // randomIndex gives a random # between 0 and length of items.
-
-  while(recentRandomNumbers.includes(randomIndex)){ // includes asks "is this in the array?" returns true/false.
-    randomIndex = randomNumber(0, allItems.length-1); // gets a new random value
-  }
-  if(recentRandomNumbers.length > 5) { // we only care about the last three images and the 2 on the page, otherwise we want repeated images. 
-    recentRandomNumbers.shift(); 
-  }
-  recentRandomNumbers.push(randomIndex);
-  return randomIndex;
-}
-
 
 // ====== Event handler ======
 function handleClick(){
@@ -106,14 +71,65 @@ function handleClick(){
   render();
 }
 
-//===== Functions =====
-Item.prototype.generateResults = function(){
-  //combine string of this.votes + "votes for the " this.name
-  this.results = `${this.votes} votes for ${this.name}`;
-  var liEl = document.createElement('li');
-  liEl.textContent = this.results;
-  ulEl.appendChild(liEl);
-};
+// ======= Helper Functions =======
+// create a random number
+function randomNumber(min, max){
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// get a random and unique index
+function getUniqueIndex(){
+  var randomIndex = randomNumber(0, allItems.length-1); // randomIndex gives a random # between 0 and length of items.
+
+  while(recentRandomNumbers.includes(randomIndex)){ // includes asks "is this in the array?" returns true/false.
+    randomIndex = randomNumber(0, allItems.length-1); // gets a new random value
+  }
+  if(recentRandomNumbers.length > 5) { // we only care about the last three images and the 2 on the page, otherwise we want repeated images. 
+    recentRandomNumbers.shift(); 
+  }
+  recentRandomNumbers.push(randomIndex);
+  return randomIndex;
+}
+
+
+// ===== Event Listener =======
+ShoppingContainerEl.addEventListener('click', handleClick);
+
+
+// ======= Functions =======
+// make a render function for the randomized images
+function render(){  // <---------------------------- TODO: DRY
+  // Render Image 1
+  var randomIndex = getUniqueIndex(); 
+  allItems[randomIndex].views++;
+  imageOneEl.src = allItems[randomIndex].filepath;
+  imageOneEl.alt = allItems[randomIndex].name;
+  imageOneEl.title = allItems[randomIndex].name;
+  // Render Image 2
+  randomIndex = getUniqueIndex();
+  allItems[randomIndex].views++;
+  imageTwoEl.src = allItems[randomIndex].filepath;
+  imageTwoEl.alt = allItems[randomIndex].name;
+  imageTwoEl.title = allItems[randomIndex].name;
+
+  // Render Image 3
+  randomIndex = getUniqueIndex();
+  allItems[randomIndex].views++;
+  imageThreeEl.src = allItems[randomIndex].filepath;
+  imageThreeEl.alt = allItems[randomIndex].name;
+  imageThreeEl.title = allItems[randomIndex].name;
+}
+
+/////////// DRY
+// function render(imageEl){  
+//   // Render Image 1
+//   var randomIndex = getUniqueIndex(); 
+//   allItems[randomIndex].views++;
+//   imageOneEl.src = allItems[randomIndex].filepath;
+//   imageOneEl.alt = allItems[randomIndex].name;
+//   imageOneEl.title = allItems[randomIndex].name;
+//   /////////////
+// Then call render below three times for each time it needs rendering (3 images)
 
 
 function generateArrays(){
@@ -137,7 +153,7 @@ function generateArrays(){
 }
 
 function generateChart(){
-  var ctx = document.getElementById('my-canvas').getContext('2d');
+  var ctx = document.getElementById('graph-1').getContext('2d');
   new Chart(ctx, {
     type: 'horizontalBar',
     data: {
@@ -218,7 +234,7 @@ function generateChart2(){
   });
 }
 
-  // Pie Chart
+// Pie Chart
 function generateChart3(){
   var ctx = document.getElementById('graph-3').getContext('2d');
   new Chart(ctx, {
@@ -259,8 +275,7 @@ function generateChart3(){
   });
 }
 
-// ===== Event Listener =======
-ShoppingContainerEl.addEventListener('click', handleClick);
+
 
 // ===== Render =====
 render();
