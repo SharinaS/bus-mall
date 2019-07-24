@@ -1,6 +1,17 @@
 'use strict';
 
+var allItems = [];
+var itemNames = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'tauntaun.jpg', 'unicorn.jpg', 'water-can.jpg', 'wine-glass.jpg', 'sweep.png', 'usb.gif'];
+var recentRandomNumbers = [];
+var totalVotes = 0;
 
+// chart making variables
+var namesArray = [];
+var itemVotes = [];
+var voteToViewPerc = [];
+var top3Votes = [];
+
+// DOM-related variables
 var ShoppingContainerEl = document.getElementById('shopping-container');
 var imageOneEl = document.getElementById('item-one');
 var imageTwoEl = document.getElementById('item-two');
@@ -9,25 +20,7 @@ var canvas1 = document.getElementById('graph-1');
 var canvas2 = document.getElementById('graph-2');
 var canvas3 = document.getElementById('graph-3');
 
-var allItems = []; 
-var itemNames = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'tauntaun.jpg', 'unicorn.jpg', 'water-can.jpg', 'wine-glass.jpg', 'sweep.png', 'usb.gif'];
-var recentRandomNumbers = [];
-var totalVotes = 0;
-
-// chart making
-var namesArray = [];
-var itemVotes = [];
-var voteToViewPerc = [];
-var top3Votes = [];
-
-//====== Local Storage ======
-
-if(localStorage){  
-  var allItemsStringed = localStorage.getItem('allTheItems');
-  // store line 27 to a variable, then assign to allItems.
-  var localStorageItems = JSON.parse(allItemsStringed);
-  allItems = localStorageItems;
-}
+getFromLocalStorageIfFull();
 
 
 //====== Constructor Function ======
@@ -37,15 +30,6 @@ function Item(name){
   this.votes = 0;
   this.views = 0;
   allItems.push(this);
-}
-
-//===== Instantiations ======
-function instantiateAllItems(){
-  if(localStorage.length < 1){
-    for(var i = 0; i < itemNames.length; i++){
-      new Item(itemNames[i]);
-    }
-  }
 }
 
 
@@ -62,29 +46,12 @@ function handleClick(){
     }
   }
 
-  if (totalVotes > 3 ){ // <------------------------------------ change back to 25
-    // turn off event listener after 25 clicks, generate arrays
-    ShoppingContainerEl.removeEventListener('click', handleClick);
-    // arrays for graphs
-    generateArrays();
-
-    
-    // add item to localStorage
-    // var allItemsStringed = JSON.stringify(allItems);
-    localStorage.setItem('allTheItems', JSON.stringify(allItems));
-
-
-  }
-
-  // make the canvas appear, since it was hidden prior to activation of handleClick()
-  canvas1.removeAttribute('hidden');
-  canvas2.removeAttribute('hidden');
-  canvas3.removeAttribute('hidden');
-
+  onceUserHasVoted();
+  makeCanvasAppear();
   render();
 }
 
-// ======= Helper Functions =======
+// ======= Two Helper Functions =======
 // create a random number
 function randomNumber(min, max){
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -110,6 +77,47 @@ ShoppingContainerEl.addEventListener('click', handleClick);
 
 
 // ======= Functions =======
+// get data from local storage if there's anything there
+function getFromLocalStorageIfFull(){
+  if(localStorage.length > 0){
+    var allItemsStringed = localStorage.getItem('allTheItems');
+    var localStorageItems = JSON.parse(allItemsStringed);
+    allItems = localStorageItems;
+  }
+}
+
+
+// Instantiation of constructor function
+function instantiateAllItems(){
+  if(localStorage.length < 1){
+    for(var i = 0; i < itemNames.length; i++){
+      new Item(itemNames[i]);
+    }
+  }
+}
+
+// Events that occur once the user has submitted all their votes
+function onceUserHasVoted(){
+  if (totalVotes > 3 ){ // <------------------------------------ change back to 25
+    // turn off event listener after 25 clicks, generate arrays
+    ShoppingContainerEl.removeEventListener('click', handleClick);
+    // arrays for graphs
+    generateArrays();
+
+    // add item to localStorage
+    var allItemsStringed = JSON.stringify(allItems);
+    localStorage.setItem('allTheItems', allItemsStringed);
+  }
+}
+
+
+// make the canvas appear, since it was hidden prior to activation of handleClick()
+function makeCanvasAppear(){
+  canvas1.removeAttribute('hidden');
+  canvas2.removeAttribute('hidden');
+  canvas3.removeAttribute('hidden');  
+}
+
 // make a render function for the randomized images
 function render(){  // <---------------------------- TODO: DRY
   // Render Image 1
