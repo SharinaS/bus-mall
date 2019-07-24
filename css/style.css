@@ -1,12 +1,25 @@
-#container {
+#user-container {
   background-image: url("../img/erwan-hesry-Q34YB7yjAxA-unsplash.jpg"); /*Photo by Erwan Hesry on Unsplash */
+  padding: 4em;
+}
+
+#data-container {
+  background-color: whitesmoke;
+  position: absolute;
+  width: 50%;
+  height: 50%;
+
 }
 
 header{
-  background-color: rgb(0, 0, 102);
+  background-color: black;
   padding: 1em;
   color: white;
   
+}
+
+#intro-section{
+  margin: 4em;
 }
 
 /* Item Box */
@@ -44,6 +57,10 @@ h1{
   /* Chart */
   #my-canvas{
     background-color: whitesmoke;
+    margin-top: 2em;
+  }
+
+  #graph-2{
     margin-top: 2em;
   }
   

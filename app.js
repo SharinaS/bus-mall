@@ -1,19 +1,25 @@
 'use strict';
 
-// get the image to render it
+var ulEl = document.getElementById('list');
 var imageOneEl = document.getElementById('item-one');
 var imageTwoEl = document.getElementById('item-two');
+
 var imageThreeEl = document.getElementById('item-three');
 var ShoppingContainerEl = document.getElementById('shopping-container');
+var canvas1 = document.getElementById('my-canvas');
+var canvas2 = document.getElementById('graph-2');
+var canvas3 = document.getElementById('graph-3');
+
 var allItems = [];
 var itemNames = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'tauntaun.jpg', 'unicorn.jpg', 'water-can.jpg', 'wine-glass.jpg', 'sweep.png', 'usb.gif'];
 var recentRandomNumbers = [];
 var totalVotes = 0;
-var ulEl = document.getElementById('list');
 
 // chart making
 var namesArray = [];
 var itemVotes = [];
+var voteToViewPerc = [];
+var top3Votes = [];
 
 //====== Constructor Function ======
 function Item(name){
@@ -31,7 +37,7 @@ for(var i = 0; i < itemNames.length; i++){
 
 
 // =======Rendering =======
-// make a render function for the randomized images 
+// make a render function for the randomized images
 function render(){  // <---------------------------- TODO: DRY
   // Render Image 1
   var randomIndex = getUniqueIndex(); 
@@ -88,11 +94,15 @@ function handleClick(){
     }
   }
 
-  if (totalVotes > 24 ){
+  if (totalVotes > 25 ){  
     // turn off event listener after 25 clicks
-    ShoppingContainerEl.removeEventListener('click', handleClick, true); // <----- check later if true needed
+    ShoppingContainerEl.removeEventListener('click', handleClick);
     generateArrays();
   }
+  canvas1.removeAttribute('hidden');
+  canvas2.removeAttribute('hidden');
+  canvas3.removeAttribute('hidden');
+
   render();
 }
 
@@ -110,8 +120,20 @@ function generateArrays(){
   for(var i = 0; i < allItems.length; i++){
     namesArray.push(allItems[i].name);
     itemVotes.push(allItems[i].votes);
+    // percentage of votes for every view
+    voteToViewPerc.push(allItems[i].votes / allItems[i].views * 100); 
   }
+  // top 3 votes
+  var sortedVotes = itemVotes.sort();
+  sortedVotes.reverse();
+  top3Votes.push(sortedVotes[0]);
+  top3Votes.push(sortedVotes[1]);
+  top3Votes.push(sortedVotes[2]);
+  console.log('sorted votes in generateArray function', sortedVotes);
+
   generateChart();
+  generateChart2();
+  generateChart3();
 }
 
 function generateChart(){
@@ -121,7 +143,7 @@ function generateChart(){
     data: {
       labels: namesArray,
       datasets: [{
-        label: '# of Votes',
+        label: 'Number of Votes per Image Shown',
         data: itemVotes,
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
@@ -155,8 +177,90 @@ function generateChart(){
 }
 
 
+// Chart for percentages
+function generateChart2(){
+  var ctx = document.getElementById('graph-2').getContext('2d');
+  new Chart(ctx, {
+    type: 'horizontalBar',
+    data: {
+      labels: namesArray,
+      datasets: [{
+        label: 'Percentage of Votes for Each View',
+        data: voteToViewPerc,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+}
+
+  // Pie Chart
+function generateChart3(){
+  var ctx = document.getElementById('graph-3').getContext('2d');
+  new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: namesArray,
+      datasets: [{
+        label: 'Pie Graph',
+        data: top3Votes,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+}
+
 // ===== Event Listener =======
-ShoppingContainerEl.addEventListener('click', handleClick, true);
+ShoppingContainerEl.addEventListener('click', handleClick);
 
 // ===== Render =====
 render();
