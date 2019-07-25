@@ -5,11 +5,13 @@ var itemNames = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfas
 var recentRandomNumbers = [];
 var totalVotes = 0;
 
-// chart making variables
+// variables for graphs 1 and 2
 var namesArray = [];
 var itemVotes = [];
 var voteToViewPerc = [];
+// variables for graph 3 - pie graph
 var top3Votes = [];
+var top3Labels = [];
 
 // DOM-related variables
 var ShoppingContainerEl = document.getElementById('shopping-container');
@@ -160,19 +162,33 @@ function render(){  // <---------------------------- TODO: DRY
 
 
 function generateArrays(){
+  top3Labels = []; // clears the array so it can be repopulated 
+  top3Votes = [];
   for(var i = 0; i < allItems.length; i++){
     namesArray.push(allItems[i].name);
     itemVotes.push(allItems[i].votes);
     // percentage of votes for every view
-    voteToViewPerc.push(allItems[i].votes / allItems[i].views * 100); 
+    voteToViewPerc.push(allItems[i].votes / allItems[i].views * 100);
   }
   // top 3 votes
-  var sortedVotes = itemVotes.sort();
-  sortedVotes.reverse();
-  top3Votes.push(sortedVotes[0]);
-  top3Votes.push(sortedVotes[1]);
-  top3Votes.push(sortedVotes[2]);
-  //console.log('sorted votes in generateArray function', sortedVotes);
+  var sortedItems = allItems.concat();
+  console.log('sorted items', sortedItems);
+  sortedItems.sort(function(a,b){
+    if(a.votes < b.votes){
+      return 1;
+    }else{
+      return -1;
+    }
+  });
+
+
+  var top3Obj = sortedItems.slice(0,3);
+  console.log('top 3 objects', top3Obj);
+  for(var j = 0; j < top3Obj.length; j++){
+    top3Labels.push(top3Obj[j].name);
+    top3Votes.push(top3Obj[j].votes);
+  }
+  console.log('top 3 votes', top3Votes);
 
   generateChart1();
   generateChart2();
@@ -267,7 +283,7 @@ function generateChart3(){
   new Chart(ctx, {
     type: 'pie',
     data: {
-      labels: namesArray,
+      labels: top3Labels,
       datasets: [{
         label: 'Pie Graph',
         data: top3Votes,
