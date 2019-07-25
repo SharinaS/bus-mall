@@ -45,12 +45,12 @@ function handleClick(){
 
 
 // ======= Two Helper Functions =======
-// create a random number
+// creates a random number
 function randomNumber(min, max){
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// get a random and unique index
+// gets a random and unique index
 function getUniqueIndex(){
   var randomIndex = randomNumber(0, allItems.length-1); // randomIndex gives a random # between 0 and length of items.
 
@@ -82,7 +82,7 @@ function getFromLocalStorageIfItsFull(){
 
 // Instantiation of constructor function
 function instantiateAllItems(){
-  if(localStorage.length < 1){ //local storage is empty in this case
+  if(localStorage.length < 1){
     for(var i = 0; i < itemNames.length; i++){
       new Item(itemNames[i]);
     }
@@ -106,7 +106,7 @@ function targetImageAndVote(){
 
 // Events that occur once the user has submitted all their votes
 function onceUserHasVoted(){
-  if (totalVotes > 3 ){ // <------------------------------------ change back to 25
+  if (totalVotes > 25){
     // turn off event listener after 25 clicks, generate arrays
     ShoppingContainerEl.removeEventListener('click', handleClick);
     // arrays for graphs
@@ -119,15 +119,16 @@ function onceUserHasVoted(){
 }
 
 
-// make the canvas appear, since it was hidden prior to activation of handleClick()
+// makes the canvas appear, since it was hidden prior to activation of handleClick()
 function makeCanvasAppear(){
   canvas1.removeAttribute('hidden');
   canvas2.removeAttribute('hidden');
   canvas3.removeAttribute('hidden');  
 }
 
-// make a render function for the randomized images
-function render(){  // <---------------------------- TODO: DRY
+
+// makes a render function for the randomized images
+function render(){
   // Render Image 1
   var randomIndex = getUniqueIndex(); 
   allItems[randomIndex].views++;
@@ -148,17 +149,6 @@ function render(){  // <---------------------------- TODO: DRY
   imageThreeEl.alt = allItems[randomIndex].name;
   imageThreeEl.title = allItems[randomIndex].name;
 }
-
-/////////// DRY
-// function render(imageEl){  
-//   // Render Image 1
-//   var randomIndex = getUniqueIndex(); 
-//   allItems[randomIndex].views++;
-//   imageOneEl.src = allItems[randomIndex].filepath;
-//   imageOneEl.alt = allItems[randomIndex].name;
-//   imageOneEl.title = allItems[randomIndex].name;
-//   /////////////
-// Then call render below three times for each time it needs rendering (3 images)
 
 
 function generateArrays(){
@@ -210,9 +200,45 @@ function generateChart1(){
           'rgba(255, 206, 86, 0.2)',
           'rgba(75, 192, 192, 0.2)',
           'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
           'rgba(255, 159, 64, 0.2)'
         ],
         borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
           'rgba(255, 99, 132, 1)',
           'rgba(54, 162, 235, 1)',
           'rgba(255, 206, 86, 1)',

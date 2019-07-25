@@ -1,4 +1,4 @@
-#user-container {
+#background-pic {
   background-image: url("../img/erwan-hesry-Q34YB7yjAxA-unsplash.jpg"); /*Photo by Erwan Hesry on Unsplash */
   padding: 4em;
 }
@@ -22,18 +22,45 @@ header{
   margin: 4em;
 }
 
-/* Item Box */
+
 h1{
     text-align: left;
     font-size: 4em;
-    font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     margin: 1em;
     font-family: 'Fascinate', cursive;
   }
 
+  h2 {
+    font-size: 2.5em;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-left: 1em;
+    text-align: left;
+    color: white;
+    font-weight: bold;
+  }
+
+  p {
+    font-size: 1em;
+    margin: 2em 0em 2em 4em;
+  }
+
+  h3 {
+    font-size: 2em;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 2em 1em 3em 1em;
+    color: white;
+    font-weight: bold;
+  }
+
+  h2, h3 {
+    color: white;
+    text-shadow: 2px 2px 4px #000000;
+  }
+
   img{
-    width: 25%;
+    width: 28em;
+    height: 20em;
     margin: 1em;
     padding: 1em;
     background-color: whitesmoke;
@@ -41,7 +68,7 @@ h1{
   #shopping-container{
     background-color: rgba(240, 244, 247, 0.445);
     border-radius: 25px;
-    height: 500px;
+    height: 30em;
     width: 90%;
     margin: auto;
     padding: 1em;
@@ -55,13 +82,12 @@ h1{
   }
 
   /* Chart */
-  #my-canvas{
+  #graph-1, #graph-2, #graph-3 {
     background-color: whitesmoke;
-    margin-top: 2em;
+    margin-top: 3em;
+    padding: 2em;
   }
 
-  #graph-2{
-    margin-top: 2em;
-  }
+ 
   
    
