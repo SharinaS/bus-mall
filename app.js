@@ -119,15 +119,16 @@ function onceUserHasVoted(){
 }
 
 
-// make the canvas appear, since it was hidden prior to activation of handleClick()
+// makes the canvas appear, since it was hidden prior to activation of handleClick()
 function makeCanvasAppear(){
   canvas1.removeAttribute('hidden');
   canvas2.removeAttribute('hidden');
   canvas3.removeAttribute('hidden');  
 }
 
-// make a render function for the randomized images
-function render(){  
+
+// makes a render function for the randomized images
+function render(){
   // Render Image 1
   var randomIndex = getUniqueIndex(); 
   allItems[randomIndex].views++;
@@ -148,17 +149,6 @@ function render(){
   imageThreeEl.alt = allItems[randomIndex].name;
   imageThreeEl.title = allItems[randomIndex].name;
 }
-
-/////////// DRY
-// function render(imageEl){  
-//   // Render Image 1
-//   var randomIndex = getUniqueIndex(); 
-//   allItems[randomIndex].views++;
-//   imageOneEl.src = allItems[randomIndex].filepath;
-//   imageOneEl.alt = allItems[randomIndex].name;
-//   imageOneEl.title = allItems[randomIndex].name;
-//   /////////////
-// Then call render below three times for each time it needs rendering (3 images)
 
 
 function generateArrays(){
