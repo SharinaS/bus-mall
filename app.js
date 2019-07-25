@@ -45,12 +45,12 @@ function handleClick(){
 
 
 // ======= Two Helper Functions =======
-// create a random number
+// creates a random number
 function randomNumber(min, max){
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// get a random and unique index
+// gets a random and unique index
 function getUniqueIndex(){
   var randomIndex = randomNumber(0, allItems.length-1); // randomIndex gives a random # between 0 and length of items.
 
@@ -82,7 +82,7 @@ function getFromLocalStorageIfItsFull(){
 
 // Instantiation of constructor function
 function instantiateAllItems(){
-  if(localStorage.length < 1){ //local storage is empty in this case
+  if(localStorage.length < 1){
     for(var i = 0; i < itemNames.length; i++){
       new Item(itemNames[i]);
     }
@@ -127,7 +127,7 @@ function makeCanvasAppear(){
 }
 
 // make a render function for the randomized images
-function render(){  // <---------------------------- TODO: DRY
+function render(){  
   // Render Image 1
   var randomIndex = getUniqueIndex(); 
   allItems[randomIndex].views++;
