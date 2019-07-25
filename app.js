@@ -1,6 +1,19 @@
 'use strict';
 
-var ulEl = document.getElementById('list');
+var allItems = [];
+var itemNames = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'tauntaun.jpg', 'unicorn.jpg', 'water-can.jpg', 'wine-glass.jpg', 'sweep.png', 'usb.gif'];
+var recentRandomNumbers = [];
+var totalVotes = 0;
+
+// variables for graphs 1 and 2
+var namesArray = [];
+var itemVotes = [];
+var voteToViewPerc = [];
+// variables for graph 3 - pie graph
+var top3Votes = [];
+var top3Labels = [];
+
+// DOM-related variables
 var ShoppingContainerEl = document.getElementById('shopping-container');
 var imageOneEl = document.getElementById('item-one');
 var imageTwoEl = document.getElementById('item-two');
@@ -9,16 +22,7 @@ var canvas1 = document.getElementById('graph-1');
 var canvas2 = document.getElementById('graph-2');
 var canvas3 = document.getElementById('graph-3');
 
-var allItems = [];
-var itemNames = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'tauntaun.jpg', 'unicorn.jpg', 'water-can.jpg', 'wine-glass.jpg', 'sweep.png', 'usb.gif'];
-var recentRandomNumbers = [];
-var totalVotes = 0;
-
-// chart making
-var namesArray = [];
-var itemVotes = [];
-var voteToViewPerc = [];
-var top3Votes = [];
+getFromLocalStorageIfItsFull();
 
 
 //====== Constructor Function ======
@@ -31,47 +35,16 @@ function Item(name){
 }
 
 
-//===== Prototype Functions =====
-Item.prototype.generateResults = function(){
-  //combine string of this.votes + "votes for the " this.name
-  this.results = `${this.votes} votes for ${this.name}`;
-  var liEl = document.createElement('li');
-  liEl.textContent = this.results;
-  ulEl.appendChild(liEl);
-};
-
-
-//===== Instantiations ======
-for(var i = 0; i < itemNames.length; i++){
-  new Item(itemNames[i]);
-}
-
-// ====== Event handler ======
+// ====== Event Handler ======
 function handleClick(){
-  // Identify which image was clicked on
-  var chosenImg = event.target.title;
-  totalVotes++;
-  console.log('my chosen image is ', chosenImg);
-
-  for(var i = 0; i < allItems.length; i++){
-    if(allItems[i].name === chosenImg){
-      allItems[i].votes++;
-    }
-  }
-
-  if (totalVotes > 25 ){  
-    // turn off event listener after 25 clicks
-    ShoppingContainerEl.removeEventListener('click', handleClick);
-    generateArrays();
-  }
-  canvas1.removeAttribute('hidden');
-  canvas2.removeAttribute('hidden');
-  canvas3.removeAttribute('hidden');
-
+  targetImageAndVote();
+  onceUserHasVoted();
+  makeCanvasAppear();
   render();
 }
 
-// ======= Helper Functions =======
+
+// ======= Two Helper Functions =======
 // create a random number
 function randomNumber(min, max){
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -97,6 +70,62 @@ ShoppingContainerEl.addEventListener('click', handleClick);
 
 
 // ======= Functions =======
+// get data from local storage if there's anything there
+function getFromLocalStorageIfItsFull(){
+  if(localStorage.length > 0){
+    var allItemsStringed = localStorage.getItem('allTheItems');
+    var localStorageItems = JSON.parse(allItemsStringed);
+    allItems = localStorageItems; // sets what is in the local storage to allItems array. 
+  }
+}
+
+
+// Instantiation of constructor function
+function instantiateAllItems(){
+  if(localStorage.length < 1){ //local storage is empty in this case
+    for(var i = 0; i < itemNames.length; i++){
+      new Item(itemNames[i]);
+    }
+  }
+}
+
+
+// Identify which image was clicked on and add a vote for that image
+function targetImageAndVote(){
+  var chosenImg = event.target.title;
+  totalVotes++;
+  console.log('my chosen image is ', chosenImg);
+
+  for(var i = 0; i < allItems.length; i++){
+    if(allItems[i].name === chosenImg){
+      allItems[i].votes++;
+    }
+  }
+}
+
+
+// Events that occur once the user has submitted all their votes
+function onceUserHasVoted(){
+  if (totalVotes > 3 ){ // <------------------------------------ change back to 25
+    // turn off event listener after 25 clicks, generate arrays
+    ShoppingContainerEl.removeEventListener('click', handleClick);
+    // arrays for graphs
+    generateArrays();
+
+    // add item to localStorage
+    var allItemsStringed = JSON.stringify(allItems);
+    localStorage.setItem('allTheItems', allItemsStringed);
+  }
+}
+
+
+// make the canvas appear, since it was hidden prior to activation of handleClick()
+function makeCanvasAppear(){
+  canvas1.removeAttribute('hidden');
+  canvas2.removeAttribute('hidden');
+  canvas3.removeAttribute('hidden');  
+}
+
 // make a render function for the randomized images
 function render(){  // <---------------------------- TODO: DRY
   // Render Image 1
@@ -133,26 +162,40 @@ function render(){  // <---------------------------- TODO: DRY
 
 
 function generateArrays(){
+  top3Labels = []; // clears the array so it can be repopulated 
+  top3Votes = [];
   for(var i = 0; i < allItems.length; i++){
     namesArray.push(allItems[i].name);
     itemVotes.push(allItems[i].votes);
     // percentage of votes for every view
-    voteToViewPerc.push(allItems[i].votes / allItems[i].views * 100); 
+    voteToViewPerc.push(allItems[i].votes / allItems[i].views * 100);
   }
   // top 3 votes
-  var sortedVotes = itemVotes.sort();
-  sortedVotes.reverse();
-  top3Votes.push(sortedVotes[0]);
-  top3Votes.push(sortedVotes[1]);
-  top3Votes.push(sortedVotes[2]);
-  console.log('sorted votes in generateArray function', sortedVotes);
+  var sortedItems = allItems.concat();
+  console.log('sorted items', sortedItems);
+  sortedItems.sort(function(a,b){
+    if(a.votes < b.votes){
+      return 1;
+    }else{
+      return -1;
+    }
+  });
 
-  generateChart();
+
+  var top3Obj = sortedItems.slice(0,3);
+  console.log('top 3 objects', top3Obj);
+  for(var j = 0; j < top3Obj.length; j++){
+    top3Labels.push(top3Obj[j].name);
+    top3Votes.push(top3Obj[j].votes);
+  }
+  console.log('top 3 votes', top3Votes);
+
+  generateChart1();
   generateChart2();
   generateChart3();
 }
 
-function generateChart(){
+function generateChart1(){
   var ctx = document.getElementById('graph-1').getContext('2d');
   new Chart(ctx, {
     type: 'horizontalBar',
@@ -240,7 +283,7 @@ function generateChart3(){
   new Chart(ctx, {
     type: 'pie',
     data: {
-      labels: namesArray,
+      labels: top3Labels,
       datasets: [{
         label: 'Pie Graph',
         data: top3Votes,
@@ -276,8 +319,8 @@ function generateChart3(){
 }
 
 
-
-// ===== Render =====
+// ===== Call Functions =====
+instantiateAllItems();
 render();
 
 
