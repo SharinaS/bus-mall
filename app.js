@@ -20,7 +20,7 @@ var canvas1 = document.getElementById('graph-1');
 var canvas2 = document.getElementById('graph-2');
 var canvas3 = document.getElementById('graph-3');
 
-getFromLocalStorageIfFull();
+getFromLocalStorageIfItsFull();
 
 
 //====== Constructor Function ======
@@ -35,21 +35,12 @@ function Item(name){
 
 // ====== Event Handler ======
 function handleClick(){
-  // Identify which image was clicked on
-  var chosenImg = event.target.title;
-  totalVotes++;
-  console.log('my chosen image is ', chosenImg);
-
-  for(var i = 0; i < allItems.length; i++){
-    if(allItems[i].name === chosenImg){
-      allItems[i].votes++;
-    }
-  }
-
+  targetImageAndVote();
   onceUserHasVoted();
   makeCanvasAppear();
   render();
 }
+
 
 // ======= Two Helper Functions =======
 // create a random number
@@ -78,23 +69,38 @@ ShoppingContainerEl.addEventListener('click', handleClick);
 
 // ======= Functions =======
 // get data from local storage if there's anything there
-function getFromLocalStorageIfFull(){
+function getFromLocalStorageIfItsFull(){
   if(localStorage.length > 0){
     var allItemsStringed = localStorage.getItem('allTheItems');
     var localStorageItems = JSON.parse(allItemsStringed);
-    allItems = localStorageItems;
+    allItems = localStorageItems; // sets what is in the local storage to allItems array. 
   }
 }
 
 
 // Instantiation of constructor function
 function instantiateAllItems(){
-  if(localStorage.length < 1){
+  if(localStorage.length < 1){ //local storage is empty in this case
     for(var i = 0; i < itemNames.length; i++){
       new Item(itemNames[i]);
     }
   }
 }
+
+
+// Identify which image was clicked on and add a vote for that image
+function targetImageAndVote(){
+  var chosenImg = event.target.title;
+  totalVotes++;
+  console.log('my chosen image is ', chosenImg);
+
+  for(var i = 0; i < allItems.length; i++){
+    if(allItems[i].name === chosenImg){
+      allItems[i].votes++;
+    }
+  }
+}
+
 
 // Events that occur once the user has submitted all their votes
 function onceUserHasVoted(){
@@ -166,7 +172,7 @@ function generateArrays(){
   top3Votes.push(sortedVotes[0]);
   top3Votes.push(sortedVotes[1]);
   top3Votes.push(sortedVotes[2]);
-  console.log('sorted votes in generateArray function', sortedVotes);
+  //console.log('sorted votes in generateArray function', sortedVotes);
 
   generateChart1();
   generateChart2();
